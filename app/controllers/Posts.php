@@ -94,4 +94,73 @@ else{
 
         $this->view('posts/show',$data);
     }
+    public function delete($id)
+    {
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+//Sanitize POST ARRAY
+
+$_POST =filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
+
+$data=[
+    'title'=>trim($_POST['title']),
+    'body'=>trim($_POST['body']),
+    'user_id'=>$_SESSION['user_id'],
+    'title_err'=>'',
+    'body_err'=>''
+];
+
+//Validation
+
+if(empty($data['title']))
+{
+    $data['title_err']='Please enter post title';
+}
+if(empty($data['body']))
+{
+    $data['body_err']='Please enter post content';
+}
+
+if(empty($data['title_err'])&& empty($data[
+'body_err'
+]))
+{
+if($this->postModel->addPost($data))
+{
+    flash('post_message','Post Added');
+    redirect('posts');
+}
+else{
+    
+    die('lel good error');
+}
+
+
+
+
+}
+else{
+    //Load view with error
+    $this->view('posts/add',$data);
+}
+
+
+        }
+        else{
+            //get existing post
+            $post=$this->postModel->getPostById($id);
+
+            if($post->user_id!= $_SESSION['user_id'])
+            {
+redirect('posts');
+            }
+            $data=[
+                'id'=>$id,
+                'title'=>$post->title,
+                'body'=>$post->body
+            ];
+        }
+      
+        $this->view('posts/edit',$data);
+    }
 }
