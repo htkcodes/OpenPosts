@@ -7,6 +7,7 @@
 <?php endif;?>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
       <?php if(isset($_SESSION['user_id'])):?>
+      <li><a href="#">Welcome <?php echo $_SESSION['user_name']?></a></li>
         <li><a href="<?php echo URLROOT; ?>/users/logout">Logout</a></li>
 <?php else :?>
         <li><a href="<?php echo URLROOT; ?>">Home</a></li>
